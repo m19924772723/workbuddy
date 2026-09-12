@@ -2,7 +2,7 @@
 // 由 Windows 计划任务调用（系统级，不经 WorkBuddy 自动化），故不产生任何聊天记录。
 // 职责：跑 push-daily.mjs → 解析 push.log → 把一行摘要追加到 daily-log.md（UTF-8 无 BOM）
 import { spawnSync } from 'node:child_process';
-import { readFileSync, appendFileSync } from 'node:fs';
+import { readFileSync, appendFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 
 const NODE = 'C:\\Users\\1\\.workbuddy\\binaries\\node\\versions\\22.22.2-3\\node.exe';
@@ -17,8 +17,9 @@ const stamp = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate
 
 function main() {
   // GIT_TERMINAL_PROMPT=0：非交互环境禁止 git 弹出凭据询问，避免计划任务卡死
+  // --backfill：先补齐历史缺口（某天计划任务没跑成时那天就没有 commit）
   const env = { ...process.env, GIT_TERMINAL_PROMPT: '0' };
-  const r = spawnSync(NODE, [PUSH], { cwd: ROOT, encoding: 'utf8', env });
+  const r = spawnSync(NODE, [PUSH, '--backfill'], { cwd: ROOT, encoding: 'utf8', env });
   const rc = r.status ?? 1;
 
   let last = '';
@@ -46,9 +47,12 @@ function main() {
     }
   }
   const summary = `活动${items}条，` + parts.join(' / ');
-  const line = `${stamp} ｜ AI效率日报三平台推送 ｜ ${summary}\n`;
+  // 若本次补录了历史缺口，从 push.log 里取出补录清单一起写进摘要
+  const bfRaw = last.match(/backfilled=\[([^\]]*)\]/);
+  const bfPart = bfRaw ? `补录${bfRaw[1].split(',').length}天(${bfRaw[1]}) ` : '';
+  const line = `${stamp} ｜ AI效率日报三平台推送 ｜ ${bfPart}${summary}\n`;
   appendFileSync(DAILYLOG, line, 'utf8');
-  appendFileSync(path.join(ROOT, 'auto-run.log'), `[${stamp}] node rc=${rc} | ${summary}\n`, 'utf8');
+  appendFileSync(path.join(ROOT, 'auto-run.log'), `[${stamp}] node rc=${rc} | ${bfPart}${summary}\n`, 'utf8');
   console.log(`[${stamp}] ${summary} (node rc=${rc})`);
 }
 

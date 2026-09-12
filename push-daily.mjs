@@ -11,7 +11,9 @@ const GIT = 'D:/code/environment/PortableGit-2.55.0.5/cmd/git.exe';
 
 const args = process.argv.slice(2);
 const noPush = args.includes('--no-push');
+const withBackfill = args.includes('--backfill');
 const dateArg = args.includes('--date') ? args[args.indexOf('--date') + 1] : null;
+const LOOKBACK = 14; // 补录时回溯的天数上限
 
 // 本地日期（Asia/Shanghai，本机时区即 GMT+8）
 function todayStr() {
@@ -97,6 +99,34 @@ const dailyDir = path.join(ROOT, 'daily');
 mkdirSync(dailyDir, { recursive: true });
 
 const activities = loadActivities();
+
+// ---- 缺口补录（--backfill）：把「当天有活动但缺日报」的日子补齐，保证贡献图连续 ----
+// 只补真实有活动的日子，不为了绿点刷空日报；commit 日期回填为当天 21:30
+let backfilled = [];
+if (withBackfill) {
+  const active = new Set(activities.map((a) => (a.at || '').slice(0, 10)).filter(Boolean));
+  for (let i = LOOKBACK; i >= 1; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const pad = (n) => String(n).padStart(2, '0');
+    const day = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    if (!active.has(day)) continue;                                   // 当天无活动，跳过
+    if (existsSync(path.join(dailyDir, `${day}.md`))) continue;       // 已有日报，跳过
+
+    const dayItems = activities
+      .filter((a) => localDayOf(a.at) === day)
+      .sort((a, b) => new Date(a.at) - new Date(b.at));
+    writeFileSync(path.join(dailyDir, `${day}.md`), buildDailyMd(day, dayItems), 'utf8');
+    writeFileSync(path.join(ROOT, 'README.md'), buildReadme(dailyDir), 'utf8');
+    git('add', '-A');
+    if (git('status', '--porcelain').trim()) {
+      gitDated(`${day}T21:30:00+08:00`, 'commit', '-m', `daily: ${day} AI 效率日报（${dayItems.length} 条活动）`);
+      backfilled.push(`${day}(${dayItems.length}条)`);
+    }
+  }
+  if (backfilled.length) console.log(`补录 ${backfilled.length} 天：${backfilled.join(', ')}`);
+}
+
 const items = activities
   .filter((a) => localDayOf(a.at) === targetDate)
   .sort((a, b) => new Date(a.at) - new Date(b.at));
@@ -108,6 +138,10 @@ console.log(`生成日报 ${targetDate}，含 ${items.length} 条活动`);
 // ---- git 提交与推送 ----
 function git(...gitArgs) {
   return execFileSync(GIT, gitArgs, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+}
+function gitDated(stamp, ...gitArgs) {
+  const env = { ...process.env, GIT_TERMINAL_PROMPT: '0', GIT_AUTHOR_DATE: stamp, GIT_COMMITTER_DATE: stamp };
+  return execFileSync(GIT, gitArgs, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], env });
 }
 
 let committed = false;
@@ -138,6 +172,7 @@ if (noPush) {
 } else {
   results.push('无提交，跳过推送');
 }
-const logLine = `[${new Date().toISOString()}] ${targetDate} items=${items.length} committed=${committed} | ${results.join(' | ')}`;
+const bfPart = backfilled.length ? ` backfilled=[${backfilled.join(',')}]` : '';
+const logLine = `[${new Date().toISOString()}] ${targetDate} items=${items.length} committed=${committed}${bfPart} | ${results.join(' | ')}`;
 writeFileSync(path.join(ROOT, 'push.log'), (existsSync(path.join(ROOT, 'push.log')) ? readFileSync(path.join(ROOT, 'push.log'), 'utf8') : '') + logLine + '\n', 'utf8');
 console.log(results.join('\n'));
