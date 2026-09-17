@@ -1,2 +1,13 @@
-# workbuddy
-workbuddy
+# workbuddy — AI 效率日报
+
+每天自动推送当日的 AI 工作日志到本仓库（GitHub / Gitee / AtomGit 三平台同步）。
+
+**已连续记录 1 天**
+
+## 日报索引
+
+- [2026-09-17 日报](daily/2026-09-17.md)
+
+## 数据来源
+
+内容来自本地「个人工作台」活动日志（WorkBuddy AI 完成任务后自动登记），由 `push-daily.mjs` 每日生成，非人工撰写。
