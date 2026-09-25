@@ -12,3 +12,4 @@
 [2026-09-25T15:11:30.522Z] 2026-09-20 items=2 committed=true | 跳过推送（--no-push）
 [2026-09-25T15:14:55.201Z] 2026-09-25 items=2 committed=true | 跳过推送（--no-push）
 [2026-09-25T15:16:24.322Z] 2026-09-11 items=0 committed=true | 跳过推送（--no-push）
+[2026-09-25T15:23:27.336Z] 2026-09-25 items=2 committed=false backfilled=[2026-09-12(3条),2026-09-15(12条),2026-09-16(14条)] | 跳过推送（--no-push）

@@ -155,22 +155,33 @@ if (status.trim()) {
   console.log('无内容变化，跳过提交');
 }
 
+const sleepSync = (ms) => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+
+// 推送带重试：本机走系统代理，GitHub 偶发 "CONNECT tunnel failed 502" / "SSL handshake failed"，
+// 重试一次通常就能过；全部失败才记为失败（积压的 commit 下次运行会继续自动补推）
+function pushRemote(r, tries = 3) {
+  let lastErr = '';
+  for (let i = 1; i <= tries; i++) {
+    try {
+      git('push', r, 'HEAD:main');
+      return i === 1 ? '推送成功' : `推送成功（第${i}次）`;
+    } catch (e) {
+      lastErr = ((e.stderr || e.message || '').toString())
+        .replace(/https?:\/\/[^@\s]+@/g, '***@')
+        .split('\n').slice(0, 2).join(' | ');
+      if (i < tries) sleepSync(4000);
+    }
+  }
+  return `推送失败 — ${lastErr}`;
+}
+
 const results = [];
 if (noPush) {
   results.push('跳过推送（--no-push）');
-} else if (committed) {
-  const remotes = git('remote').trim().split('\n').filter(Boolean);
-  for (const r of remotes) {
-    try {
-      git('push', r, 'HEAD:main');
-      results.push(`${r}: 推送成功`);
-    } catch (e) {
-      const msg = (e.stderr || e.message || '').toString().replace(/https?:\/\/[^@\s]+@/g, 'https://***@');
-      results.push(`${r}: 推送失败 — ${msg.split('\n').slice(0, 3).join(' | ')}`);
-    }
-  }
 } else {
-  results.push('无提交，跳过推送');
+  // 无条件尝试推送：即使本次没有新提交，也能把上次失败积压的 commit 一并补推
+  const remotes = git('remote').trim().split('\n').filter(Boolean);
+  for (const r of remotes) results.push(`${r}: ${pushRemote(r)}`);
 }
 const bfPart = backfilled.length ? ` backfilled=[${backfilled.join(',')}]` : '';
 const logLine = `[${new Date().toISOString()}] ${targetDate} items=${items.length} committed=${committed}${bfPart} | ${results.join(' | ')}`;
