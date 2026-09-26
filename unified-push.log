@@ -1,0 +1,9 @@
+===== 2026-09-26 13:29 每日统一推送 =====
+--- workbuddy-daily [workbuddy 日报 · 三平台] rc=ERR 0.0s
+stdout: (空)
+>>> workbuddy-daily: FAIL — 失败(rc=ERR) EBUSY spawnSync C:\Users\1\.workbuddy\binaries\node\versions\22.22.2-3\node.exe EBUSY
+--- hermes-workbench [hermes 工作台管线 · profile/daily/ai_pm/myblog] rc=ERR 0.0s
+stdout: (空)
+>>> hermes-workbench: FAIL — 失败(rc=ERR) EBUSY spawnSync D:/code/environment/Git/bin/bash.exe EBUSY
+===== 汇总: 有失败项 =====
+

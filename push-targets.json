@@ -1,0 +1,25 @@
+{
+  "_comment": "每日统一推送配置 —— 唯一入口 push-all.mjs 按数组顺序串行执行。新增/停用仓库只改本文件，不用改脚本、不用加计划任务。",
+  "dailyLog": "D:/code/workbuddy/.workbuddy/memory/automations/e08d34ac-4596-4385-8939-482d4ed9e72c/daily-log.md",
+  "units": [
+    {
+      "id": "workbuddy-daily",
+      "name": "workbuddy 日报 · 三平台",
+      "type": "node",
+      "cwd": "D:/code/workbuddy/git-daily",
+      "file": "push-daily.mjs",
+      "args": ["--backfill"],
+      "timeoutMs": 300000,
+      "enabled": true
+    },
+    {
+      "id": "hermes-workbench",
+      "name": "hermes 工作台管线 · profile/daily/ai_pm/myblog",
+      "type": "bash",
+      "bash": "D:/code/environment/Git/bin/bash.exe",
+      "script": "/d/code/workbench/scripts/daily.sh",
+      "timeoutMs": 900000,
+      "enabled": true
+    }
+  ]
+}

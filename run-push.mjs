@@ -1,6 +1,8 @@
-// run-push.mjs — 每日 AI 效率日报推送包装器
-// 由 Windows 计划任务调用（系统级，不经 WorkBuddy 自动化），故不产生任何聊天记录。
-// 职责：跑 push-daily.mjs → 解析 push.log → 把一行摘要追加到 daily-log.md（UTF-8 无 BOM）
+// run-push.mjs — 【已并入 push-all.mjs，计划任务不再调用本文件（2026-09-26）】
+// 保留用途：只想单独补一份 workbuddy 日报时手动跑 node run-push.mjs。
+// 每日统一入口是 push-all.mjs（配置见 push-targets.json），它按顺序跑所有推送单元。
+//
+// 原职责：跑 push-daily.mjs → 解析 push.log → 把一行摘要追加到 daily-log.md（UTF-8 无 BOM）
 import { spawnSync } from 'node:child_process';
 import { readFileSync, appendFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
