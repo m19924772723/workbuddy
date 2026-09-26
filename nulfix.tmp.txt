@@ -1,0 +1,3 @@
+﻿not found via \\?\ path
+git status now:
+?? nul
