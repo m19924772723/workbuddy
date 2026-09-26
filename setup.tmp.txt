@@ -1,6 +1,0 @@
-﻿WorkBuddy-DailyPush | State=Ready | Enabled=True | NextRun=09/26/2026 21:30:30
-   Exec: C:\Users\1\.workbuddy\binaries\node\versions\22.22.2-3\node.exe "D:\code\workbuddy\git-daily\push-all.mjs"
-   BatteryOK=True | StartWhenAvailable=True
-HermesDailyWorkbench | State=Disabled | Enabled=False | NextRun=09/26/2026 22:00:00
-   Exec: D:\code\workbench\scripts\daily.cmd 
-   BatteryOK=False | StartWhenAvailable=False

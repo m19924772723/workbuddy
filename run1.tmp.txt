@@ -1,3 +1,0 @@
-﻿State=Running
-LastRun=09/26/2026 13:29:29
-Result=267009
