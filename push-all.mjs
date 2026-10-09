@@ -15,7 +15,7 @@ import { readFileSync, appendFileSync, existsSync, writeFileSync } from 'node:fs
 import path from 'node:path';
 
 const ROOT = 'D:/code/workbuddy/git-daily';
-const NODE = 'C:\\Users\\1\\.workbuddy\\binaries\\node\\versions\\22.22.2-3\\node.exe';
+const NODE = 'C:\\Users\\1\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe';
 const CFG = path.join(ROOT, 'push-targets.json');
 const DETAIL_LOG = path.join(ROOT, 'unified-push.log');
 const RUN_LOG = path.join(ROOT, 'auto-run.log');

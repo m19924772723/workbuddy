@@ -135,3 +135,25 @@ stderr(tail6): warning: in the working copy of '2026/09/2026-09-28.md', LF will 
 >>> hermes-workbench: OK — push:    9f321fa..12975c6  main -> main ｜ gitee:    9f321fa..12975c6  main -> main ｜ atomgit:    9f321fa..12975c6  main -> main ｜ [13:22:52] ai_pm: 无改动，跳过提交 ｜ [13:22:52] 全部完成 ✅ ｜ push:    28d1d19..118f587  main -> main ｜ gitee:    28d1d19..118f587  main -> main ｜ atomgit:    28d1d19..118f587  main -> main
 ===== 汇总: 全部成功 =====
 
+===== 2026-10-23 23:54 每日统一推送 =====
+--- workbuddy-daily [workbuddy 日报 · 三平台] rc=ERR 0.0s
+stdout: (空)
+>>> workbuddy-daily: FAIL — 失败(rc=ERR) ENOENT spawnSync C:\Users\1\.workbuddy\binaries\node\versions\22.22.2-3\node.exe ENOENT
+--- hermes-workbench [hermes 工作台管线 · profile/daily/ai_pm/myblog] rc=0 122.3s
+stdout(tail):   atomgit:    d3246a9..92e1ea7  main -> main
+  [23:56:08] 全部完成 ✅
+  [23:56:11] heat: HEAT_WARN 近7天 Gitee 贡献均为 0（近8天: 2026-10-16=0 2026-10-17=0 2026-10-18=0 2026-10-19=0 2026-10-20=0 2026-10-21=0 2026-10-22=0 2026-10-23=0）
+  [23:56:11] heat: HEAT_HINT 可能原因: ①163邮箱未点Gitee验证链接(绑定≠验证) ②新账号统计延迟≤1周
+  [23:56:12] heat: HEAT_HINT 处理: ①查163邮箱点验证 ②若已验证仍为0,等待1周后自愈,期间不重复告警
+  [23:56:13] ⚠ 警告: Gitee 热度 7 天未点亮 —— 见 163 邮箱验证链接 / 等待统计延迟
+  [23:56:16] 技能库清单已刷新
+    已同步 -> D:/code/myblog\src\content\workbench\2026-10-23.md
+    origin:    cae6926..ae657ac  main -> main
+    gitee:    cae6926..ae657ac  main -> main
+    atomgit:    cae6926..ae657ac  main -> main
+  [23:56:42] 提醒弹窗已触发
+stderr(tail6): warning: in the working copy of '2026/10/2026-10-23.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'plans/补齐计划-2026-10-20.md', LF will be replaced by CRLF the next time Git touches it
+>>> hermes-workbench: OK — atomgit:    979b290..de724ee  main -> main ｜ gitee:    785746a..ab7d289  main -> main ｜ atomgit:    785746a..ab7d289  main -> main ｜ gitee:    d3246a9..92e1ea7  main -> main ｜ atomgit:    d3246a9..92e1ea7  main -> main ｜ [23:56:08] 全部完成 ✅ ｜ gitee:    cae6926..ae657ac  main -> main ｜ atomgit:    cae6926..ae657ac  main -> main
+===== 汇总: 有失败项 =====
+

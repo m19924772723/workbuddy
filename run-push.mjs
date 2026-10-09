@@ -7,7 +7,7 @@ import { spawnSync } from 'node:child_process';
 import { readFileSync, appendFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 
-const NODE = 'C:\\Users\\1\\.workbuddy\\binaries\\node\\versions\\22.22.2-3\\node.exe';
+const NODE = 'C:\\Users\\1\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe';
 const ROOT = 'D:/code/workbuddy/git-daily';
 const PUSH = path.join(ROOT, 'push-daily.mjs');
 const PUSHLOG = path.join(ROOT, 'push.log');
